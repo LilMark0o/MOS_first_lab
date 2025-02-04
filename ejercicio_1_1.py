@@ -17,13 +17,13 @@ tareas = {
 }
 
 prioridad_numero = {
-    "Mínima": 1 * len(tareas),
-    "Baja": 2 * len(tareas),
-    "Media baja": 3 * len(tareas),
-    "Media": 4 * len(tareas),
-    "Media alta": 5 * len(tareas),
-    "Alta": 6 * len(tareas),
-    "Máxima": 7 * len(tareas)
+    "Mínima": len(tareas)**1,
+    "Baja": len(tareas)**2,
+    "Media baja": len(tareas)**3,
+    "Media": len(tareas)**4,
+    "Media alta": len(tareas)**5,
+    "Alta": len(tareas)**6,
+    "Máxima": len(tareas)**7,
 }
 
 for k, v in tareas.items():
@@ -48,12 +48,17 @@ Model.story_points_constraint = Constraint(expr=sum(
 
 SolverFactory('glpk').solve(Model)
 
-total_ganancia = 0
+total_task_per_priority = {}
 for i in tareas_a_realizar:
     if Model.x[i]() == 1:
-        total_ganancia += tareas[i]["prioridad_numero"]
+        total_task_per_priority[tareas[i]["prioridad"]] = total_task_per_priority.get(
+            tareas[i]["prioridad"], 0) + 1
+title = 'Cantidad de tareas por prioridad: '
+texts = []
+for k, v in total_task_per_priority.items():
+    texts.append(f'{k}: {v}')
+title += ', '.join(texts)
 
-text = f'La ganancia total es de {total_ganancia} puntos de historia'
 
 plot_assignment_heatmap2(
-    Model, tareas, title=f'La ganancia total es de {total_ganancia} puntos de historia', filename='ejercicio_1_1.png')
+    Model, tareas, title=title, filename='ejercicio_1_1.png')

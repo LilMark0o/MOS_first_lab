@@ -15,13 +15,13 @@ tareas = {
 }
 
 prioridad_numero = {
-    "Mínima": 1 * len(tareas),
-    "Baja": 2 * len(tareas),
-    "Media baja": 3 * len(tareas),
-    "Media": 4 * len(tareas),
-    "Media alta": 5 * len(tareas),
-    "Alta": 6 * len(tareas),
-    "Máxima": 7 * len(tareas)
+    "Mínima": len(tareas)**1,
+    "Baja": len(tareas)**2,
+    "Media baja": len(tareas)**3,
+    "Media": len(tareas)**4,
+    "Media alta": len(tareas)**5,
+    "Alta": len(tareas)**6,
+    "Máxima": len(tareas)**7,
 }
 
 for k, v in tareas.items():
@@ -55,11 +55,18 @@ for j in tareas_a_realizar:
         sum(Model.x[i, j] for i in desarrolladores_disponibles) <= 1)
 
 SolverFactory('glpk').solve(Model)
-total_ganancia = 0
-for i in desarrolladores_disponibles:
-    for j in tareas_a_realizar:
-        if Model.x[i, j]() == 1:
-            total_ganancia += tareas[j]["prioridad_numero"]
-
+total_task_per_priority = {}
+for i in tareas_a_realizar:
+    for j in desarrolladores_disponibles:
+        if Model.x[j, i]() == 1:
+            if tareas[i]["prioridad"] in total_task_per_priority:
+                total_task_per_priority[tareas[i]["prioridad"]] += 1
+            else:
+                total_task_per_priority[tareas[i]["prioridad"]] = 1
+title = 'Cantidad de tareas por prioridad: '
+texts = []
+for k, v in total_task_per_priority.items():
+    texts.append(f'{k}: {v}')
+title += ', '.join(texts)
 plot_assignment_heatmap(Model, list(
-    desarrolladores_disponibles), list(tareas_a_realizar), title=f'La ganancia total es de {total_ganancia} puntos de historia', file='ejercicio_1_2.png')
+    desarrolladores_disponibles), list(tareas_a_realizar), title=title, file='ejercicio_1_2.png')
