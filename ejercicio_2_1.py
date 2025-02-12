@@ -23,7 +23,7 @@ Model.x = Var(horas_disponibles, tareas_a_realizar, domain=Binary)
 
 
 def maximizeFunction(model):
-    return sum(Model.x[i, j] * trabajos[i]['ganancia'] for i in horas_disponibles for j in tareas_a_realizar)
+    return sum(Model.x[i, j] * trabajos[j]['ganancia'] for i in horas_disponibles for j in tareas_a_realizar)
 
 
 Model.obj = Objective(rule=maximizeFunction, sense=maximize)

@@ -39,3 +39,22 @@ def plot_assignment_heatmap2(model, tareas, title="Asignación de tareas a desar
     plt.xlabel("Tareas")
     plt.title(title)
     plt.savefig(filename)
+
+
+def plot_assignment_heatmap3(model, aviones, recursos, file='ejercicio_3_1.png', title="Asignación de recursos a aviones"):
+    assignment_matrix = np.zeros((len(aviones), len(recursos)))
+
+    for i in aviones:
+        for j in recursos:
+            if model.x[i, j].value > 0.8:
+                assignment_matrix[i-1, j-1] = 1  # Ajuste de índices a base 0
+
+    plt.figure(figsize=(10, 6))
+    sns.heatmap(assignment_matrix, annot=True, cmap="Blues",
+                cbar=False, xticklabels=recursos, yticklabels=aviones)
+    
+    plt.xlabel("Aviones")
+    plt.ylabel("Recursos")
+    plt.title(title)
+    plt.savefig(file)
+    plt.close()
