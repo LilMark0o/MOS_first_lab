@@ -59,10 +59,11 @@ SolverFactory('glpk').solve(Model)
 
 
 total_valor = sum(Model.x[i, j].value * recursos[i]['valor']
-                     for i in recursos_disponibles for j in aviones_disponibles)
+                  for i in recursos_disponibles for j in aviones_disponibles)
 
 print(f"El valor total es: {total_valor}")
 for i in recursos_disponibles:
     for j in aviones_disponibles:
         print(f"x[{i},{j}] = {Model.x[i, j].value}")
-plot_assignment_heatmap3(Model, list(recursos_disponibles), list(aviones_disponibles), 'ejercicio_3_1.png')
+plot_assignment_heatmap3(Model, list(recursos_disponibles), list(
+    aviones_disponibles), 'ejercicio_3_1.png')
